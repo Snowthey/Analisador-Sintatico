@@ -11,10 +11,10 @@ public class AnalisadorSintatico {
     }
 
     void AnaliseSintatica(){
-        if(objetoRegrasSintaticas.INICIO(VetorAnaliseLexica) == true){
+        if(objetoRegrasSintaticas.INICIO(VetorAnaliseLexica)){
             int Tamanho = VetorAnaliseLexica.size();
             int QuantidadeTotalLinhas = VetorAnaliseLexica.get(Tamanho - 1).Linha;
-            int LinhaAtual = 3;
+            int LinhaAtual = 1;
             boolean ProgramaSemErros = true;
             int QuantidadeDeErros = 0;
 
@@ -27,11 +27,12 @@ public class AnalisadorSintatico {
                     }
                 }
 
-                if(objetoRegrasSintaticas.PROGRAMA(VetorAnaliseLexica) == false){
+                if(!objetoRegrasSintaticas.PROGRAMA(VetorAnaliseLexica)){
                     ProgramaSemErros = false;
                     QuantidadeDeErros++;
                     System.out.print("*** ERRO SINTATICO ");
                 }
+
 
                 System.out.print("Linha: " + LinhaAtual + " ");
 
@@ -43,12 +44,14 @@ public class AnalisadorSintatico {
                 LinhaAtual++;
             }
 
-            if(ProgramaSemErros == true){
+            if(ProgramaSemErros){
                 System.out.println("\n Analise Sintatica Concluida com sucesso! Zero erros");
             } else {
                 System.out.println("\n Quantidade de Erros: " + QuantidadeDeErros);
             }
-        } else
+        } else {
             System.out.println("Erro na linha 1 - Inicialização do programa");
+        }
     }
+
 }

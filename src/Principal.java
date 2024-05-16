@@ -23,7 +23,7 @@ public class Principal {
             System.out.println("\n ====> Arquivo Selecionado: " + selectedFile.getAbsolutePath());
             boolean resultado = objetoAnalisadorLexico.AnalisadorLexico(selectedFile);
 
-            if(resultado == false){
+            if(!resultado){
                 System.out.println("\n ### Erro na ANALISE LEXICA ###");
             } else {
                 System.out.println("\n\n ******** ANALISE SINTATICA ******** \n\n");

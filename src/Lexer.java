@@ -34,33 +34,6 @@ public class Lexer {
         }
     }
 
-    boolean TokenForLoop(String Lexema) {
-        // Removendo espaços em branco para garantir que não interfiram na comparação
-        Lexema = Lexema.replaceAll("\\s+", "");
-
-        // Verifica se a string termina com ";" ou ")"
-        if (Lexema.endsWith(";") || Lexema.endsWith(")")) {
-            // Dividindo a string em partes separadas
-            String[] partes = Lexema.split(";");
-
-            // Verificando se há exatamente uma parte
-            if (partes.length == 1) {
-                // Remove espaços em branco antes e depois da parte
-                String parte = partes[0].trim();
-
-                // Verifica se a parte contém um "="
-                if (parte.contains("=")) {
-                    return true;
-                }
-                if (parte.contains("<") || parte.contains(">")) {
-                    return true;
-                }
-            }
-        }
-        // Se não passar em alguma das verificações, retorna false
-        return false;
-    }
-
     boolean TokenCout(String Lexema){
         if(Lexema.equals("cout"))
             return true;
@@ -86,7 +59,7 @@ public class Lexer {
     }
 
     boolean TokenTipoPrintln(String Lexema){
-        if(Lexema.equals("println"))
+        if(Lexema.equals("println") || Lexema.equals("println(\"Digite"))
             return true;
         else return false;
     }
@@ -185,34 +158,61 @@ public class Lexer {
         else return false;
     }
 
-    boolean EhDigito(char str){
-        if(Character.isDigit(str))
-            return true;
-        else return false;
-    }
+    boolean TokenForLoop(String Lexema) {
+        // Removendo espaços em branco para garantir que não interfiram na comparação
+        Lexema = Lexema.replaceAll("\\s+", "");
 
-    boolean EhLetra(char str){
-        if(Character.isLetter(str))
-            return true;
-        else return false;
-    }
+        // Verifica se a string termina com ";" ou ")"
+        if (Lexema.endsWith(";") || Lexema.endsWith(")")) {
+            // Dividindo a string em partes separadas
+            String[] partes = Lexema.split(";");
 
-    boolean TokenStringEntreAspas(String texto) {
-        // Define o padrão para verificar se a string está entre aspas
-        Pattern pattern = Pattern.compile("[\"“][^\"]*[\"”]");
+            // Verificando se há exatamente uma parte
+            if (partes.length == 1) {
+                // Remove espaços em branco antes e depois da parte
+                String parte = partes[0].trim();
 
-        // Cria um Matcher para encontrar o padrão na string de entrada
-        Matcher matcher = pattern.matcher(texto);
-
-        // Verifica se foi encontrado um padrão
-        if (matcher.find()) {
-            // Retorna true se a string entre aspas contiver pelo menos uma letra
-            return matcher.group().matches(".*[a-zA-Z].*");
+                // Verifica se a parte contém um "="
+                if (parte.contains("=")) {
+                    return true;
+                }
+                if (parte.contains("<") || parte.contains(">")) {
+                    return true;
+                }
+            }
         }
-
-        // Se não encontrar um padrão, retorna false
+        // Se não passar em alguma das verificações, retorna false
         return false;
     }
+
+    boolean TokenStringEntreAspas(String Lexema) {
+        boolean entreAspas = false;
+        int contadorAspas = 0;
+        boolean dentroDeString = false;
+
+        // Itera pela string
+        for (int i = 0; i < Lexema.length(); i++) {
+            char c = Lexema.charAt(i);
+
+            // Verifica se encontramos uma aspa dupla
+            if (c == '"') {
+                contadorAspas++;
+                dentroDeString = !dentroDeString; // Inverte o estado dentro/fora de uma string
+            }
+        }
+
+        // Verifica se o número de aspas duplas é ímpar e se não há quebra de linha no meio
+        if (contadorAspas % 2 != 0 && !Lexema.contains("\n")) {
+            entreAspas = true;
+        }
+
+        if(Lexema.equals("é:") || (Lexema.equals("multiplicado:")))
+            entreAspas = true;
+
+        return entreAspas;
+    }
+
+
 
     boolean TokenNumeroInteiro(String lexema) {
         int tamanho = lexema.length();
@@ -530,7 +530,6 @@ public class Lexer {
             }
 
             System.out.println("Linha: " + Linha + " - Lexema: " + Lexema + " simbolo: " + objTabelaDeSimbolos.buscarValor(CodigoToken) + " Token: " + CodigoToken);
-            objTabelaDeSimbolos.buscarValor(Integer.valueOf(CodigoToken +  " Token: " + CodigoToken));
         }
         return ResultadoAnaliseLexica;
     }
